@@ -106,11 +106,12 @@ async function chatReplyProcess(options: RequestOptions) {
 
     const response = await api.sendMessage(message, {
       ...options,
-      onProgress: (partialResponse) => {
-        process?.(partialResponse)
+      onProgress: (partialResponse: ChatMessage) => {
+        if (partialResponse.text.length % 20 === 0)
+          process?.(partialResponse)
       },
     })
-
+    process?.(response)
     return sendResponse({ type: 'Success', data: response })
   }
   catch (error: any) {
